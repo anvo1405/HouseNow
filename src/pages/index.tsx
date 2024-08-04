@@ -32,10 +32,12 @@ const Index = () => {
         <Tabs.Root defaultValue="All">
           <Tabs.List className="mt-7">
             {tabList.map(tab => (
-              <Tabs.Trigger className={`px-5 py-2 mr-2 rounded-full cursor-pointer 
+              <Tabs.Trigger
+                key={tab}
+                className={`px-5 py-2 mr-2 rounded-full cursor-pointer 
                 ${tab === selectedTab
-                  ? "bg-[#334155] text-white border-none"
-                  : "border border-[#E2E8F0]"}`}
+                    ? "bg-[#334155] text-white border-none"
+                    : "border border-[#E2E8F0]"}`}
                 onClick={() => setSelectedTab(tab)}
                 value={tab}
               >
