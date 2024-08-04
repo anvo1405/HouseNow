@@ -3,7 +3,8 @@ import type { SVGProps } from 'react'
 import * as Checkbox from '@radix-ui/react-checkbox'
 
 import { api } from '@/utils/client/api'
-import { IdSchema } from '@/utils/server/base-schemas'
+
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 
 /**
  * QUESTION 3:
@@ -67,6 +68,7 @@ import { IdSchema } from '@/utils/server/base-schemas'
 export const TodoList = () => {
   const updateTodoStatusMutation = api.todoStatus.update.useMutation();
   const deleteTodoMutation = api.todo.delete.useMutation();
+  const [parent] = useAutoAnimate()
 
   const { data: todos = [], refetch} = api.todo.getAll.useQuery({
     statuses: ['completed', 'pending'],
@@ -83,7 +85,7 @@ export const TodoList = () => {
   }
 
   return (
-    <ul className="grid grid-cols-1 gap-y-3">
+    <ul className="grid grid-cols-1 gap-y-3" ref={parent}>
       {todos.map((todo) => (
         <li key={todo.id}>
           <div className={`flex items-center justify-between rounded-12 border border-gray-200 px-4 py-3 shadow-sm
