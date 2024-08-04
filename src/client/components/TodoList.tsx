@@ -65,17 +65,17 @@ import { useAutoAnimate } from '@formkit/auto-animate/react'
  *  - https://auto-animate.formkit.com
  */
 
-interface TabProps{
+interface TabProps {
   selectedTab: string;
 }
 
-export const TodoList = ({ selectedTab } : TabProps) => {
+export const TodoList = ({ selectedTab }: TabProps) => {
   const updateTodoStatusMutation = api.todoStatus.update.useMutation();
   const deleteTodoMutation = api.todo.delete.useMutation();
   const [parent] = useAutoAnimate();
 
 
-  const { data = [], refetch} = api.todo.getAll.useQuery({
+  const { data = [], refetch } = api.todo.getAll.useQuery({
     statuses: ['completed', 'pending'],
   })
 
@@ -85,15 +85,15 @@ export const TodoList = ({ selectedTab } : TabProps) => {
   };
 
   const onDelete = (id: number) => {
-    deleteTodoMutation.mutate({id: id});
+    deleteTodoMutation.mutate({ id: id });
     refetch();
   }
 
   const todos = selectedTab === 'All'
-  ? data.sort((a, b) => {
-    return b.status === 'pending' ? 1 : a.status === 'pending' ? -1 : 0;
-  })
-  : data.filter(todo => todo.status === selectedTab.toLowerCase());
+    ? data.sort((a, b) => {
+      return b.status === 'pending' ? 1 : a.status === 'pending' ? -1 : 0;
+    })
+    : data.filter(todo => todo.status === selectedTab.toLowerCase());
 
   return (
     <ul className="grid grid-cols-1 gap-y-3" ref={parent}>
@@ -122,7 +122,7 @@ export const TodoList = ({ selectedTab } : TabProps) => {
               </label>
             </div>
 
-            <XMarkIcon className='w-6 h-6 cursor-pointer' onClick={() => onDelete(todo.id)}/>
+            <XMarkIcon className='w-6 h-6 cursor-pointer' onClick={() => onDelete(todo.id)} />
           </div>
         </li>
       ))}
