@@ -66,39 +66,50 @@ import { IdSchema } from '@/utils/server/base-schemas'
 
 export const TodoList = () => {
   const updateTodoStatusMutation = api.todoStatus.update.useMutation();
+  const deleteTodoMutation = api.todo.delete.useMutation();
 
-  const { data: todos = [] } = api.todo.getAll.useQuery({
+  const { data: todos = [], refetch} = api.todo.getAll.useQuery({
     statuses: ['completed', 'pending'],
   })
-  
+
   const handleCheckboxChange = (id: number, checked: Checkbox.CheckedState) => {
     const newStatus = checked as boolean ? 'completed' : 'pending';
-    updateTodoStatusMutation.mutate({todoId: id, status: newStatus});
+    updateTodoStatusMutation.mutate({ todoId: id, status: newStatus });
   };
+
+  const onDelete = (id: number) => {
+    deleteTodoMutation.mutate({id: id});
+    refetch();
+  }
 
   return (
     <ul className="grid grid-cols-1 gap-y-3">
       {todos.map((todo) => (
         <li key={todo.id}>
-          <div className={`flex items-center rounded-12 border border-gray-200 px-4 py-3 shadow-sm
+          <div className={`flex items-center justify-between rounded-12 border border-gray-200 px-4 py-3 shadow-sm
                             ${todo.status === "completed" ? "bg-[#E2E8F0]" : ""}`
           }>
-            <Checkbox.Root
-              id={String(todo.id)}
-              className="flex h-6 w-6 items-center justify-center rounded-6 border border-gray-300 focus:border-gray-700 focus:outline-none data-[state=checked]:border-gray-700 data-[state=checked]:bg-gray-700"
-              defaultChecked={todo.status === "completed" ? true : false}
-              onCheckedChange={(checked) => {
-                todo.status = checked as boolean ? 'completed' : 'pending'
-                handleCheckboxChange(todo.id, checked)}}
-            >
-              <Checkbox.Indicator>
-                <CheckIcon className="h-4 w-4 text-white" />
-              </Checkbox.Indicator>
-            </Checkbox.Root>
+            <div className='flex'>
+              <Checkbox.Root
+                id={String(todo.id)}
+                className="flex h-6 w-6 items-center justify-center rounded-6 border border-gray-300 focus:border-gray-700 focus:outline-none data-[state=checked]:border-gray-700 data-[state=checked]:bg-gray-700"
+                defaultChecked={todo.status === "completed" ? true : false}
+                onCheckedChange={(checked) => {
+                  todo.status = checked as boolean ? 'completed' : 'pending'
+                  handleCheckboxChange(todo.id, checked)
+                }}
+              >
+                <Checkbox.Indicator>
+                  <CheckIcon className="h-4 w-4 text-white" />
+                </Checkbox.Indicator>
+              </Checkbox.Root>
 
-            <label className={`block pl-3 font-medium ${todo.status === "completed" ? "text-[#64748B] line-through" : ""}`} htmlFor={String(todo.id)}>
-              {todo.body}
-            </label>
+              <label className={`block pl-3 font-medium ${todo.status === "completed" ? "text-[#64748B] line-through" : ""}`} htmlFor={String(todo.id)}>
+                {todo.body}
+              </label>
+            </div>
+
+            <XMarkIcon className='w-6 h-6 cursor-pointer' onClick={() => onDelete(todo.id)}/>
           </div>
         </li>
       ))}
