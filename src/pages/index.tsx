@@ -1,7 +1,8 @@
+import { useState } from 'react'
+import * as Tabs from '@radix-ui/react-tabs'
+
 import { CreateTodoForm } from '@/client/components/CreateTodoForm'
 import { TodoList } from '@/client/components/TodoList'
-import { useState } from 'react';
-import * as Tabs from '@radix-ui/react-tabs';
 
 /**
  * QUESTION 6:
@@ -19,8 +20,8 @@ import * as Tabs from '@radix-ui/react-tabs';
  */
 
 const Index = () => {
-  const tabList = ['All', 'Pending', 'Completed'];
-  const [selectedTab, setSelectedTab] = useState('All');
+  const tabList = ['All', 'Pending', 'Completed']
+  const [selectedTab, setSelectedTab] = useState('All')
 
   return (
     <main className="mx-auto w-[480px] pt-12">
@@ -31,13 +32,15 @@ const Index = () => {
 
         <Tabs.Root defaultValue="All">
           <Tabs.List className="mt-7">
-            {tabList.map(tab => (
+            {tabList.map((tab) => (
               <Tabs.Trigger
                 key={tab}
-                className={`px-5 py-2 mr-2 rounded-full cursor-pointer 
-                ${tab === selectedTab
-                    ? "bg-[#334155] text-white border-none"
-                    : "border border-[#E2E8F0]"}`}
+                className={`mr-2 cursor-pointer rounded-full px-5 py-2 
+                ${
+                  tab === selectedTab
+                    ? 'border-none bg-[#334155] text-white'
+                    : 'border border-[#E2E8F0]'
+                }`}
                 onClick={() => setSelectedTab(tab)}
                 value={tab}
               >
@@ -45,8 +48,8 @@ const Index = () => {
               </Tabs.Trigger>
             ))}
           </Tabs.List>
-          {tabList.map(tab => (
-            <Tabs.TabsContent className='pt-10' value={tab}>
+          {tabList.map((tab) => (
+            <Tabs.TabsContent key={tab} className="pt-10" value={tab}>
               <TodoList selectedTab={tab} />
             </Tabs.TabsContent>
           ))}

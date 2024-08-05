@@ -1,10 +1,8 @@
 import { type SVGProps } from 'react'
-
 import * as Checkbox from '@radix-ui/react-checkbox'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 
 import { api } from '@/utils/client/api'
-
-import { useAutoAnimate } from '@formkit/auto-animate/react'
 
 /**
  * QUESTION 3:
@@ -66,49 +64,54 @@ import { useAutoAnimate } from '@formkit/auto-animate/react'
  */
 
 interface TabProps {
-  selectedTab: string;
+  selectedTab: string
 }
 
 export const TodoList = ({ selectedTab }: TabProps) => {
-  const updateTodoStatusMutation = api.todoStatus.update.useMutation();
-  const deleteTodoMutation = api.todo.delete.useMutation();
-  const [parent] = useAutoAnimate();
-
+  const updateTodoStatusMutation = api.todoStatus.update.useMutation()
+  const deleteTodoMutation = api.todo.delete.useMutation()
+  const [parent] = useAutoAnimate()
 
   const { data = [], refetch } = api.todo.getAll.useQuery({
     statuses: ['completed', 'pending'],
   })
 
   const handleCheckboxChange = (id: number, checked: Checkbox.CheckedState) => {
-    const newStatus = checked as boolean ? 'completed' : 'pending';
-    updateTodoStatusMutation.mutate({ todoId: id, status: newStatus });
-  };
-
-  const onDelete = (id: number) => {
-    deleteTodoMutation.mutate({ id: id });
-    refetch();
+    const newStatus = (checked as boolean) ? 'completed' : 'pending'
+    updateTodoStatusMutation.mutate({ todoId: id, status: newStatus })
   }
 
-  const todos = selectedTab === 'All'
-    ? data.sort((a, b) => {
-      return b.status === 'pending' ? 1 : a.status === 'pending' ? -1 : 0;
-    })
-    : data.filter(todo => todo.status === selectedTab.toLowerCase());
+  const onDelete = (id: number) => {
+    deleteTodoMutation.mutate({ id: id })
+    refetch()
+  }
+
+  const todos =
+    selectedTab === 'All'
+      ? data.sort((a, b) => {
+          return b.status === 'pending' ? 1 : a.status === 'pending' ? -1 : 0
+        })
+      : data.filter((todo) => todo.status === selectedTab.toLowerCase())
 
   return (
     <ul className="grid grid-cols-1 gap-y-3" ref={parent}>
       {todos.map((todo) => (
         <li key={todo.id}>
-          <div className={`flex items-center justify-between rounded-12 border border-gray-200 px-4 py-3 shadow-sm
-                            ${todo.status === "completed" ? "bg-[#E2E8F0]" : ""}`
-          }>
-            <div className='flex'>
+          <div
+            className={`flex items-center justify-between rounded-12 border border-gray-200 px-4 py-3 shadow-sm
+                              ${
+                                todo.status === 'completed'
+                                  ? 'bg-[#E2E8F0]'
+                                  : ''
+                              }`}
+          >
+            <div className="flex">
               <Checkbox.Root
                 id={String(todo.id)}
                 className="flex h-6 w-6 items-center justify-center rounded-6 border border-gray-300 focus:border-gray-700 focus:outline-none data-[state=checked]:border-gray-700 data-[state=checked]:bg-gray-700"
-                defaultChecked={todo.status === "completed" ? true : false}
+                defaultChecked={todo.status === 'completed' ? true : false}
                 onCheckedChange={(checked) => {
-                  todo.status = checked as boolean ? 'completed' : 'pending'
+                  todo.status = (checked as boolean) ? 'completed' : 'pending'
                   handleCheckboxChange(todo.id, checked)
                 }}
               >
@@ -117,12 +120,22 @@ export const TodoList = ({ selectedTab }: TabProps) => {
                 </Checkbox.Indicator>
               </Checkbox.Root>
 
-              <label className={`block pl-3 font-medium ${todo.status === "completed" ? "text-[#64748B] line-through" : ""}`} htmlFor={String(todo.id)}>
+              <label
+                className={`block pl-3 font-medium ${
+                  todo.status === 'completed'
+                    ? 'text-[#64748B] line-through'
+                    : ''
+                }`}
+                htmlFor={String(todo.id)}
+              >
                 {todo.body}
               </label>
             </div>
 
-            <XMarkIcon className='w-6 h-6 cursor-pointer' onClick={() => onDelete(todo.id)} />
+            <XMarkIcon
+              className="h-6 w-6 cursor-pointer"
+              onClick={() => onDelete(todo.id)}
+            />
           </div>
         </li>
       ))}

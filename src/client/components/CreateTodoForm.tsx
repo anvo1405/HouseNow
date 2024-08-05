@@ -40,7 +40,7 @@ export const CreateTodoForm = () => {
       body: todoBody,
     })
     setTodoBody('')
-  };
+  }
 
   return (
     <form className="group flex items-center justify-between rounded-12 border border-gray-200 py-2 pr-4 focus-within:border-gray-400">
@@ -58,18 +58,18 @@ export const CreateTodoForm = () => {
         }}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
-            handleSubmitForm();
+            handleSubmitForm()
           }
         }}
         className="flex-1 px-4 text-base placeholder:text-gray-400 focus:outline-none"
       />
 
       <button
-        className="px-5 py-2 bg-[#334155] text-white border-none rounded-full"
+        className="rounded-full·border-none·bg-[#334155]·px-5·py-2·text-white"
         type="submit"
         disabled={isCreatingTodo}
         onClick={() => {
-          handleSubmitForm();
+          handleSubmitForm()
         }}
       >
         Add
